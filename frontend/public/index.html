@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SONASID Nador — Plateforme Collecte Forum</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root { 
+            --sonasid-green: #1B4D3E; 
+            --sonasid-hover: #143a2e; 
+            --sonasid-orange: #f37023; 
+            --sonasid-orange-hover: #d65d18; 
+        }
+        body { background-color: #f4f7f6; font-family: 'Segoe UI', sans-serif; }
+        .navbar-sonasid { background-color: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); padding: 15px 0; }
+        .brand-logo { background-color: var(--sonasid-orange); color: white; font-weight: 800; padding: 5px 15px; border-radius: 6px; font-size: 20px; text-decoration: none; }
+        .forum-card { border: none; border-radius: 16px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06); background: #ffffff; }
+        .zone-drop { border: 2px dashed var(--sonasid-green) !important; border-radius: 14px; background-color: #fdfefe; transition: all 0.3s ease; cursor: pointer; }
+        .zone-drop:hover { background-color: #f0f9f5; transform: scale(1.001); }
+        .btn-sonasid { background-color: var(--sonasid-green); color: white; border: none; font-weight: 600; padding: 10px 25px; }
+        .btn-sonasid:hover { background-color: var(--sonasid-hover); color: white; }
+        .btn-excel { background-color: var(--sonasid-orange); color: white; border: none; font-weight: 600; }
+        .btn-excel:hover { background-color: var(--sonasid-orange-hover); color: white; }
+        .file-item { background: #ffffff; border-left: 5px solid var(--sonasid-green); }
+        
+        /* Style du bouton Retour Admin */
+        .btn-admin-nav {
+            color: var(--sonasid-orange);
+            border: 2px solid var(--sonasid-orange);
+            background: transparent;
+            font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .btn-admin-nav:hover {
+            background: var(--sonasid-orange);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barre de navigation -->
+    <nav class="navbar-sonasid mb-5">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <span class="brand-logo me-3">S</span>
+                <div>
+                    <h5 class="m-0 fw-bold text-dark">SONASID</h5>
+                    <small class="text-muted">Site de Nador — Espace Forum RH</small>
+                </div>
+            </div>
+            <!-- Lien mis à jour pour rediriger correctement vers l'interface de backend -->
+           <a href="/static/upload.html" class="btn-admin-nav">
+    <i class="fas fa-arrow-left me-2"></i>Retour à l'Import Annuel
+</a>
+                
+            
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <div class="row justify-content-center">
+            <div class="col-xl-8 col-lg-10">
+                <div class="card forum-card p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        <div class="mb-2"><i class="fas fa-users-cog shadow p-3 bg-light rounded-circle text-success fa-2x"></i></div>
+                        <h2 class="fw-bold text-dark">Dépôt Collectif Multi-CV</h2>
+                    </div>
+
+                    <div class="d-flex justify-content-end mb-4">
+                        <button onclick="telechargerExcelMisAJour()" class="btn btn-excel px-4 py-2 rounded-pill shadow-sm">
+                            <i class="fas fa-file-excel me-2"></i> Télécharger l'Excel Global
+                        </button>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold text-secondary small text-uppercase">Poste cible</label>
+                        <select id="posteLot" class="form-select py-2">
+                            <option value="Data Analyst">Data Analyst</option>
+                            <option value="Développeur Python">Développeur Python</option>
+                            <option value="Responsable RH">Responsable RH</option>
+                            <option value="Spontané">Candidature Spontanée / Forum</option>
+                        </select>
+                    </div>
+
+                    <div id="zoneDepotMassif" class="zone-drop p-5 text-center shadow-sm" onclick="document.getElementById('inputFichiersForum').click()">
+                        <i class="fas fa-cloud-upload-alt fa-3x mb-3" style="color: var(--sonasid-green);"></i>
+                        <h4 class="fw-bold text-dark">Glissez vos fichiers CV ici</h4>
+                        <p class="text-muted small">Formats acceptés : PDF, DOCX, TXT</p>
+                        <input type="file" id="inputFichiersForum" multiple accept=".pdf,.docx,.doc,.txt" class="d-none">
+                    </div>
+
+                    <div id="fileListPreview" class="mt-4 d-none">
+                        <ul id="listeNomsFichiers" class="list-group mb-4"></ul>
+                        <button id="btnSoumettreLot" class="btn btn-sonasid w-100 py-3 rounded-3 fs-5 shadow" onclick="envoyerTousLesCV()">
+                            <i class="fas fa-magic me-2"></i> Exécuter l'analyse
+                        </button>
+                    </div>
+
+                    <div id="statutChargement" class="text-center d-none mt-4 p-4 border rounded bg-light">
+                        <div class="spinner-border text-success mb-3" role="status"></div>
+                        <h5>Analyse des documents en cours par l'Agent...</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    const inputFichiersForum = document.getElementById('inputFichiersForum');
+    const zoneDepotMassif = document.getElementById('zoneDepotMassif');
+    let listeFichiersRH = [];
+
+    inputFichiersForum.addEventListener('change', (e) => { gererFichiersSelectionnes(e.target.files); });
+    zoneDepotMassif.addEventListener('dragover', (e) => { e.preventDefault(); });
+    zoneDepotMassif.addEventListener('drop', (e) => { e.preventDefault(); gererFichiersSelectionnes(e.dataTransfer.files); });
+
+    function gererFichiersSelectionnes(files) {
+        listeFichiersRH = [...listeFichiersRH, ...Array.from(files)];
+        if (listeFichiersRH.length === 0) return;
+        document.getElementById('fileListPreview').classList.remove('d-none');
+        const conteneurListe = document.getElementById('listeNomsFichiers');
+        conteneurListe.innerHTML = "";
+        listeFichiersRH.forEach((f) => {
+            conteneurListe.innerHTML += `<li class="list-group-item file-item d-flex justify-content-between align-items-center my-1 border rounded p-2"><span>${f.name}</span></li>`;
+        });
+    }
+
+    async function envoyerTousLesCV() {
+        if (listeFichiersRH.length === 0) return;
+        const formData = new FormData();
+        formData.append('poste_vise', document.getElementById('posteLot').value);
+        for (let i = 0; i < listeFichiersRH.length; i++) { formData.append('files', listeFichiersRH[i]); }
+
+        document.getElementById('btnSoumettreLot').disabled = true;
+        document.getElementById('statutChargement').classList.remove('d-none');
+
+        try {
+            const response = await fetch('/api/public/cv', { method: 'POST', body: formData });
+            const data = await response.json();
+            document.getElementById('statutChargement').classList.add('d-none');
+            document.getElementById('btnSoumettreLot').disabled = false;
+
+            if (response.ok) {
+                alert(`Importation complétée :\n${data.message}`);
+                listeFichiersRH = [];
+                document.getElementById('fileListPreview').classList.add('d-none');
+            } else { alert("Erreur d'importation."); }
+        } catch (err) {
+            document.getElementById('statutChargement').classList.add('d-none');
+            document.getElementById('btnSoumettreLot').disabled = false;
+            alert("Erreur serveur.");
+        }
+    }
+
+    function telechargerExcelMisAJour() { window.location.href = `/api/public/cv/download-excel?t=${new Date().getTime()}`; }
+    </script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SONASID RH - Connexion</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            border-radius: 15px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .logo h1 { color: #ff6b35; font-size: 24px; }
+        .logo p { color: #666; font-size: 14px; }
+        
+        .form-group { margin-bottom: 20px; }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff6b35;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: white;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(255,107,53,0.4); }
+        
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #ff6b35;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .error {
+            display: none;
+            background: #ffebee;
+            color: #f44336;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .error.show { display: block; }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <div class="logo">
+            <div class="logo-icon">S</div>
+            <h1>SONASID RH</h1>
+            <p>Espace réservé au service RH</p>
+        </div>
+        
+        <div class="error" id="error">Identifiants incorrects</div>
+        
+        <div class="form-group">
+            <label>Identifiant</label>
+            <input type="text" id="username" placeholder="Votre identifiant">
+        </div>
+        
+        <div class="form-group">
+            <label>Mot de passe</label>
+            <input type="password" id="password" placeholder="••••••••">
+        </div>
+        
+        <button class="btn" id="loginBtn">🔒 Se connecter</button>
+        
+        <a href="/" class="back-link">← Retour au site public</a>
+    </div>
+
+    <script>
+        document.getElementById('loginBtn').addEventListener('click', async () => {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                document.getElementById('error').textContent = 'Veuillez remplir tous les champs';
+                document.getElementById('error').classList.add('show');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/rh/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    localStorage.setItem('rh_token', data.token);
+                    window.location.href = '/rh/app';
+                } else {
+                    document.getElementById('error').textContent = 'Identifiants incorrects';
+                    document.getElementById('error').classList.add('show');
+                }
+            } catch (err) {
+                document.getElementById('error').textContent = 'Erreur de connexion';
+                document.getElementById('error').classList.add('show');
+            }
+        });
+    </script>
+</body>
+</html>

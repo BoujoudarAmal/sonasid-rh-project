@@ -1,0 +1,41 @@
+{
+  "agent": "agent_import_excel",
+  "annee_reference": "2025",
+  "timestamp": "2026-07-10T21:52:10.300817",
+  "fichier": "TDB_NADOR 09-2025.xlsx",
+  "feuilles_trouvees": [
+    "TDB",
+    "EFFECTIF",
+    "Feuil3",
+    "Feuil1",
+    "Pyramide age",
+    "WFP",
+    "Paramètres",
+    "mouvement",
+    "Feuil2"
+  ],
+  "lignes_importees": {
+    "TDB": 30,
+    "EFFECTIF": 158,
+    "Feuil3": 121,
+    "Feuil1": 134,
+    "Pyramide age": 22,
+    "WFP": 3,
+    "Paramètres": 56,
+    "mouvement": 48,
+    "Feuil2": 137
+  },
+  "erreurs": [],
+  "doublons_detectes": 0,
+  "valeurs_manquantes": {
+    "DEB_CONTRAT": 158,
+    "C_COUT": 45,
+    "DATE_DE_NAISSANCE": 158,
+    "DATE_RETRAITE": 158,
+    "DATE_DE_DÉPART": 158,
+    "MOTIF": 146,
+    "PYRAMIDE_AGE": 12,
+    "PYRAMIDE_ANCIENNTE": 12
+  },
+  "changements_detectes": []
+}
